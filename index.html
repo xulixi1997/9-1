@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海南代西网络科技有限公司 - 智能康复机器人领航者</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Firebase Configuration (Placeholder for structure compatibility) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Config would go here in a real app
+    </script>
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"PingFang SC"', '"Microsoft YaHei"', 'sans-serif'],
+                    },
+                    colors: {
+                        // Tech Teal - Primary
+                        primary: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488', // Main Brand Color
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        // Vitality Orange - Accent
+                        accent: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            200: '#fed7aa',
+                            300: '#fdba74',
+                            400: '#fb923c',
+                            500: '#f97316', // Main Accent
+                            600: '#ea580c',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                            900: '#7c2d12',
+                        }
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "linear-gradient(to right bottom, rgba(13, 148, 136, 0.9), rgba(15, 118, 110, 0.9)), url('https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&w=2000&q=80')",
+                        'tech-grid': "radial-gradient(#cbd5e1 1px, transparent 1px)",
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        .tech-bg {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        /* Glassmorphism utils */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        /* Hide scrollbar for neatness */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <!-- Logo area -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="scrollToSection('hero')">
+                <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary-200">
+                    <i data-lucide="cpu" size="24"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-bold text-slate-900 tracking-tight leading-none">DAIXI<span class="text-primary-600">TECH</span></span>
+                    <span class="text-xs text-slate-500 font-medium tracking-widest">海南代西科技</span>
+                </div>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden xl:flex items-center space-x-6">
+                <a href="#about" class="text-slate-600 hover:text-primary-600 font-medium transition-colors">关于我们</a>
+                <a href="#technology" class="text-slate-600 hover:text-primary-600 font-medium transition-colors">核心技术</a>
+                <a href="#products" class="text-slate-600 hover:text-primary-600 font-medium transition-colors">产品矩阵</a>
+                <a href="#cloud" class="text-slate-600 hover:text-primary-600 font-medium transition-colors">智慧云</a>
+                <a href="#games" class="text-slate-600 hover:text-primary-600 font-medium transition-colors">趣味康复</a>
+                <a href="#testimonials" class="text-slate-600 hover:text-primary-600 font-medium transition-colors">用户见证</a>
+                <button onclick="scrollToSection('contact')" class="bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-full font-bold shadow-lg shadow-primary-200 transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                    联系我们 <i data-lucide="arrow-right" size="16"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="xl:hidden text-slate-700" onclick="toggleMobileMenu()">
+                <i data-lucide="menu" size="28"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white shadow-xl border-t border-gray-100 py-4 px-6 flex flex-col space-y-4 xl:hidden">
+            <a href="#about" class="text-slate-600 font-medium py-2 border-b border-gray-50" onclick="toggleMobileMenu()">关于我们</a>
+            <a href="#technology" class="text-slate-600 font-medium py-2 border-b border-gray-50" onclick="toggleMobileMenu()">核心技术</a>
+            <a href="#products" class="text-slate-600 font-medium py-2 border-b border-gray-50" onclick="toggleMobileMenu()">产品矩阵</a>
+            <a href="#cloud" class="text-slate-600 font-medium py-2 border-b border-gray-50" onclick="toggleMobileMenu()">智慧云平台</a>
+            <a href="#games" class="text-slate-600 font-medium py-2 border-b border-gray-50" onclick="toggleMobileMenu()">趣味康复</a>
+            <button onclick="scrollToSection('contact'); toggleMobileMenu()" class="w-full bg-primary-600 text-white py-3 rounded-lg font-bold mt-2">联系我们</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-white">
+        <!-- Background Shapes -->
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-primary-50 rounded-bl-[100px] -z-10 opacity-70"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-accent-50 rounded-full blur-3xl -z-10"></div>
+        
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+                <div class="lg:w-1/2 space-y-8 animate-fade-in-up">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-bold">
+                        <span class="relative flex h-3 w-3">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-3 w-3 bg-primary-500"></span>
+                        </span>
+                        智能康复新时代
+                    </div>
+                    <h1 class="text-4xl lg:text-6xl font-extrabold text-slate-900 leading-tight">
+                        人机共融，<br>
+                        让康复<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400">触手可及</span>
+                    </h1>
+                    <p class="text-lg text-slate-600 leading-relaxed max-w-xl">
+                        海南代西网络科技有限公司致力于开发模块化、高性价比的康复机器人。我们利用先进的力控技术与趣味游戏库，为您打造全周期、全场景的智能康复体验。
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <button onclick="scrollToSection('products')" class="bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-xl font-bold shadow-xl shadow-primary-200 transition-all hover:-translate-y-1">
+                            探索产品矩阵
+                        </button>
+                        <button onclick="scrollToSection('games')" class="bg-white border-2 border-slate-200 text-slate-700 hover:border-accent-400 hover:text-accent-500 px-8 py-4 rounded-xl font-bold transition-all hover:-translate-y-1 flex items-center gap-2">
+                            <i data-lucide="gamepad-2" size="20"></i>
+                            体验趣味康复
+                        </button>
+                    </div>
+                    
+                    <!-- Stats -->
+                    <div class="grid grid-cols-3 gap-8 pt-8 border-t border-gray-100">
+                        <div>
+                            <p class="text-3xl font-bold text-slate-900">100%</p>
+                            <p class="text-sm text-slate-500">人机共融</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold text-slate-900">模块化</p>
+                            <p class="text-sm text-slate-500">灵活组装</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold text-slate-900">全周期</p>
+                            <p class="text-sm text-slate-500">康复覆盖</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2 relative">
+                    <!-- Tech Illustration using specific colors -->
+                    <div class="relative z-10 animate-float">
+                        <img src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=1200&q=80" 
+                             alt="AI Robot Arm" 
+                             class="rounded-3xl shadow-2xl border-8 border-white object-cover w-full h-[500px]">
+                        
+                        <!-- Floating Cards -->
+                        <div class="absolute -left-6 top-10 bg-white p-4 rounded-2xl shadow-xl flex items-center gap-3 animate-pulse-slow">
+                            <div class="w-10 h-10 bg-accent-100 rounded-full flex items-center justify-center text-accent-600">
+                                <i data-lucide="activity" size="20"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">力控精度</p>
+                                <p class="font-bold text-slate-800">0.01 N.m</p>
+                            </div>
+                        </div>
+
+                        <div class="absolute -right-6 bottom-20 bg-white p-4 rounded-2xl shadow-xl flex items-center gap-3">
+                            <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center text-primary-600">
+                                <i data-lucide="smile" size="20"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">用户满意度</p>
+                                <p class="font-bold text-slate-800">99.8%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Decorative Circle -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] border border-dashed border-primary-200 rounded-full -z-0 animate-spin-slow"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- [NEW Module 1] R&D Strength / About -->
+    <section id="about" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="order-2 md:order-1 relative">
+                     <div class="absolute inset-0 bg-primary-100 rounded-3xl transform rotate-3"></div>
+                     <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" alt="R&D Team" class="relative rounded-3xl shadow-xl z-10 w-full h-80 object-cover">
+                </div>
+                <div class="order-1 md:order-2">
+                    <span class="text-primary-600 font-bold tracking-wider uppercase">研发实力</span>
+                    <h2 class="text-3xl font-bold text-slate-900 mt-2 mb-6">产学研深度融合<br>构筑技术壁垒</h2>
+                    <p class="text-slate-600 leading-relaxed mb-8">
+                        代西科技拥有一支由机器人学博士、临床康复专家及资深算法工程师组成的跨界团队。我们不仅关注机器的精密，更懂人体的奥秘。
+                    </p>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-slate-50 p-4 rounded-xl border-l-4 border-accent-500">
+                            <p class="text-2xl font-bold text-slate-900">30+</p>
+                            <p class="text-sm text-slate-500">核心技术专利</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border-l-4 border-primary-500">
+                            <p class="text-2xl font-bold text-slate-900">5年</p>
+                            <p class="text-sm text-slate-500">底层算法迭代</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border-l-4 border-blue-500">
+                            <p class="text-2xl font-bold text-slate-900">TOP3</p>
+                            <p class="text-sm text-slate-500">高校联合实验室</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border-l-4 border-purple-500">
+                            <p class="text-2xl font-bold text-slate-900">ISO</p>
+                            <p class="text-sm text-slate-500">国际质量认证</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Technology Section -->
+    <section id="technology" class="py-20 bg-slate-50 relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-primary-600 font-bold tracking-wider uppercase">核心技术驱动</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mt-2">模块化力控关节技术</h2>
+                <div class="w-20 h-1.5 bg-accent-500 mx-auto mt-4 rounded-full"></div>
+                <p class="text-slate-600 mt-6">
+                    我们抛弃了传统刚性机械结构，采用先进的柔性力控算法，实现机器人与人体的安全交互与精准辅助。
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Tech Card 1 -->
+                <div class="group p-8 rounded-2xl bg-white border border-transparent hover:border-primary-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="layers" size="28"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">高度模块化设计</h3>
+                    <p class="text-slate-500 leading-relaxed">
+                        如同积木般灵活。通过标准化的接口设计，关节可以快速拆装组合，适应上肢、下肢、腰部等不同部位的康复需求。
+                    </p>
+                </div>
+
+                <!-- Tech Card 2 -->
+                <div class="group p-8 rounded-2xl bg-white border border-transparent hover:border-primary-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                    <div class="w-14 h-14 bg-primary-100 text-primary-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="zap" size="28"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">实时力控感应</h3>
+                    <p class="text-slate-500 leading-relaxed">
+                        毫秒级响应速度。传感器实时感知患者发力意图，提供“按需辅助”，既防止肌肉拉伤，又激发患者的主动参与感。
+                    </p>
+                </div>
+
+                <!-- Tech Card 3 -->
+                <div class="group p-8 rounded-2xl bg-white border border-transparent hover:border-primary-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                    <div class="w-14 h-14 bg-accent-100 text-accent-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="coins" size="28"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">高性价比方案</h3>
+                    <p class="text-slate-500 leading-relaxed">
+                        通过供应链优化与自主研发核心零部件，我们将高端康复机器人的成本大幅降低，致力于让每个社区、每个家庭都用得起。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Matrix Section -->
+    <section id="products" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <!-- Background Glow -->
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-primary-900 rounded-full blur-[100px] opacity-50"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-accent-900 rounded-full blur-[100px] opacity-30"></div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div>
+                    <span class="text-primary-400 font-bold tracking-wider uppercase">产品矩阵</span>
+                    <h2 class="text-3xl md:text-5xl font-bold mt-2">全场景康复机器人</h2>
+                </div>
+                <p class="text-slate-400 max-w-md mt-4 md:mt-0">
+                    从医院的专业设备到家庭的便携助手，我们构建了完整的产品生态。
+                </p>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Product 1: Large Card -->
+                <div class="group relative bg-slate-800 rounded-3xl overflow-hidden h-[400px]">
+                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80" 
+                         alt="Upper Limb Robot" 
+                         class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 w-full">
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <h3 class="text-2xl font-bold mb-2">上肢康复机器人 Pro</h3>
+                                <p class="text-slate-300 text-sm line-clamp-2">专为脑卒中后上肢功能障碍设计，支持肩肘腕多关节联动训练。</p>
+                            </div>
+                            <button class="bg-primary-600 p-3 rounded-full hover:bg-primary-500 transition-colors">
+                                <i data-lucide="arrow-up-right" size="24"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="grid gap-8">
+                    <!-- Product 2 -->
+                    <div class="group relative bg-slate-800 rounded-3xl overflow-hidden h-[184px] flex items-center">
+                        <div class="w-1/2 p-8 relative z-10">
+                            <h3 class="text-xl font-bold mb-2">下肢外骨骼</h3>
+                            <p class="text-slate-400 text-xs mb-4">重塑行走能力，轻量化设计。</p>
+                            <span class="text-accent-400 text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all cursor-pointer">
+                                查看详情 <i data-lucide="chevron-right" size="16"></i>
+                            </span>
+                        </div>
+                        <div class="w-1/2 h-full relative">
+                            <img src="https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?auto=format&fit=crop&w=800&q=80" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                    </div>
+
+                    <!-- Product 3 -->
+                    <div class="group relative bg-slate-800 rounded-3xl overflow-hidden h-[184px] flex items-center">
+                        <div class="w-1/2 p-8 relative z-10">
+                            <h3 class="text-xl font-bold mb-2">智能康复手套</h3>
+                            <p class="text-slate-400 text-xs mb-4">柔性驱动，精细动作训练。</p>
+                            <span class="text-accent-400 text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all cursor-pointer">
+                                查看详情 <i data-lucide="chevron-right" size="16"></i>
+                            </span>
+                        </div>
+                        <div class="w-1/2 h-full relative">
+                            <img src="https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?auto=format&fit=crop&w=800&q=80" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- [NEW Module 2] Smart Cloud Platform -->
+    <section id="cloud" class="py-20 bg-white overflow-hidden">
+        <div class="container mx-auto px-6">
+             <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="lg:w-1/2 relative">
+                    <!-- Dashboard Mockup -->
+                    <div class="bg-slate-900 rounded-2xl shadow-2xl p-2 border border-slate-700">
+                        <div class="bg-slate-800 rounded-xl p-6 h-80 flex flex-col justify-between">
+                            <div class="flex justify-between items-center mb-6">
+                                <div class="flex gap-2">
+                                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                </div>
+                                <div class="text-xs text-slate-400">DaiXi Cloud Dashboard</div>
+                            </div>
+                            <div class="flex gap-4 mb-4">
+                                <div class="w-1/2 bg-slate-700 h-24 rounded-lg animate-pulse"></div>
+                                <div class="w-1/2 bg-slate-700 h-24 rounded-lg animate-pulse"></div>
+                            </div>
+                            <div class="bg-slate-700 h-32 rounded-lg relative overflow-hidden">
+                                <!-- Fake Chart -->
+                                <svg class="w-full h-full text-primary-500" viewBox="0 0 100 40" preserveAspectRatio="none">
+                                    <path d="M0,40 Q20,10 40,25 T80,15 T100,0 V40 H0 Z" fill="currentColor" opacity="0.2"/>
+                                    <path d="M0,40 Q20,10 40,25 T80,15 T100,0" fill="none" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- App Mockup Floating -->
+                    <div class="absolute -right-8 -bottom-10 w-48 bg-white rounded-2xl shadow-2xl border-4 border-slate-900 p-2 animate-float">
+                        <div class="bg-primary-50 rounded-xl h-64 flex flex-col items-center justify-center">
+                            <div class="w-16 h-16 bg-primary-200 rounded-full flex items-center justify-center mb-4">
+                                <i data-lucide="check-circle" class="text-primary-600" size="32"></i>
+                            </div>
+                            <p class="text-sm font-bold text-slate-800">今日训练完成</p>
+                            <p class="text-xs text-slate-500">坚持就是胜利！</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2">
+                    <span class="text-primary-600 font-bold tracking-wider uppercase">智慧医疗</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mt-2 mb-6">代西云平台：<br>看不见的康复专家</h2>
+                    <p class="text-slate-600 leading-relaxed mb-8">
+                        硬件只是躯体，数据才是灵魂。通过物联网技术，我们的设备与云端实时连接，为医生和患者提供精准的康复数据分析。
+                    </p>
+                    <ul class="space-y-6">
+                        <li class="flex gap-4">
+                            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center shrink-0 text-blue-600">
+                                <i data-lucide="bar-chart-2" size="24"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-900">精准评估量化</h4>
+                                <p class="text-sm text-slate-500 mt-1">自动生成康复报表，关节活动度、肌力变化一目了然。</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="w-12 h-12 bg-accent-50 rounded-xl flex items-center justify-center shrink-0 text-accent-600">
+                                <i data-lucide="wifi" size="24"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-900">远程康复指导</h4>
+                                <p class="text-sm text-slate-500 mt-1">医生可远程下发训练处方，患者在家即可享受专业指导。</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Library Section -->
+    <section id="games" class="py-20 tech-bg overflow-hidden">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="lg:w-5/12">
+                    <span class="inline-block py-1 px-3 rounded bg-accent-100 text-accent-600 text-xs font-bold mb-4 uppercase">Gamification Therapy</span>
+                    <h2 class="text-4xl font-bold text-slate-900 mb-6">枯燥训练？<br>那是过去式了。</h2>
+                    <p class="text-slate-600 text-lg leading-relaxed mb-8">
+                        我们将专业的康复动作融入到趣味游戏库中。患者在“打飞机”、“切水果”、“赛车”的过程中，不知不觉完成了成百上千次的康复训练动作。
+                    </p>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                                <i data-lucide="check" size="16"></i>
+                            </div>
+                            <span class="font-medium text-slate-700">实时视觉反馈，增强神经可塑性</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                                <i data-lucide="check" size="16"></i>
+                            </div>
+                            <span class="font-medium text-slate-700">难度自适应算法，保持挑战与成就感</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                                <i data-lucide="check" size="16"></i>
+                            </div>
+                            <span class="font-medium text-slate-700">云端数据记录，医生远程监控</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="lg:w-7/12 relative">
+                    <!-- Game UI Mockups -->
+                    <div class="relative z-10 grid grid-cols-2 gap-4">
+                        <div class="space-y-4 mt-8">
+                            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-lg hover:-translate-y-2 transition-transform duration-300 w-full h-48 object-cover">
+                            <div class="bg-white p-4 rounded-2xl shadow-lg border border-gray-100">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center text-orange-500">
+                                        <i data-lucide="trophy" size="16"></i>
+                                    </div>
+                                    <h4 class="font-bold">得分榜</h4>
+                                </div>
+                                <div class="w-full bg-gray-100 rounded-full h-2 mb-2">
+                                    <div class="bg-orange-500 h-2 rounded-full" style="width: 75%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500">今日训练目标达成 75%</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="bg-primary-600 p-6 rounded-2xl shadow-lg text-white">
+                                <i data-lucide="gamepad" size="32" class="mb-4"></i>
+                                <h4 class="text-xl font-bold">趣味游戏库</h4>
+                                <p class="text-primary-100 text-sm mt-2">包含 50+ 款康复专属游戏</p>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-lg hover:-translate-y-2 transition-transform duration-300 w-full h-56 object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- [NEW Module 3] Testimonials -->
+    <section id="testimonials" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-primary-600 font-bold tracking-wider uppercase">生命见证</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mt-2">他们的康复故事</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Story 1 -->
+                <div class="bg-slate-50 p-8 rounded-2xl relative">
+                    <i data-lucide="quote" class="text-primary-200 absolute top-6 right-6" size="40"></i>
+                    <p class="text-slate-600 italic mb-6 leading-relaxed">"中风后我的左手几乎失去了知觉。使用了上肢机器人三个月后，我现在已经可以自己拿勺子吃饭了。游戏化的训练让我觉得不再是在受罪，而是在闯关。"</p>
+                    <div class="flex items-center gap-4">
+                         <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80" class="w-12 h-12 rounded-full object-cover">
+                         <div>
+                             <h4 class="font-bold text-slate-900">张阿姨</h4>
+                             <p class="text-xs text-slate-500">脑卒中康复患者</p>
+                         </div>
+                    </div>
+                </div>
+                 <!-- Story 2 -->
+                <div class="bg-slate-50 p-8 rounded-2xl relative">
+                    <i data-lucide="quote" class="text-primary-200 absolute top-6 right-6" size="40"></i>
+                    <p class="text-slate-600 italic mb-6 leading-relaxed">"代西科技的设备不仅性价比高，而且数据反馈非常精准。通过云平台，我可以同时管理几十位病人的训练进度，大大提高了我们科室的效率。"</p>
+                    <div class="flex items-center gap-4">
+                         <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=150&q=80" class="w-12 h-12 rounded-full object-cover">
+                         <div>
+                             <h4 class="font-bold text-slate-900">刘主任</h4>
+                             <p class="text-xs text-slate-500">某三甲医院康复科</p>
+                         </div>
+                    </div>
+                </div>
+                 <!-- Story 3 -->
+                <div class="bg-slate-50 p-8 rounded-2xl relative">
+                    <i data-lucide="quote" class="text-primary-200 absolute top-6 right-6" size="40"></i>
+                    <p class="text-slate-600 italic mb-6 leading-relaxed">"作为一名运动员，受伤后的康复期是灰暗的。这个外骨骼让我在早期就能进行负重训练，力控非常柔顺，让我有信心重返赛场。"</p>
+                    <div class="flex items-center gap-4">
+                         <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80" class="w-12 h-12 rounded-full object-cover">
+                         <div>
+                             <h4 class="font-bold text-slate-900">Mike</h4>
+                             <p class="text-xs text-slate-500">运动损伤康复者</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scenarios Section -->
+    <section id="scenarios" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-primary-600 font-bold tracking-wider uppercase">未来愿景</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mt-2">从康复到健身，无界拓展</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+                <div class="px-8 py-8 text-center group hover:bg-slate-50 transition-colors rounded-xl">
+                    <div class="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center text-blue-600 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                        <i data-lucide="building-2" size="32"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">专业医疗机构</h3>
+                    <p class="text-slate-500 text-sm">为医院康复科提供高效、量化的康复解决方案，提升科室流转率。</p>
+                </div>
+                <div class="px-8 py-8 text-center group hover:bg-slate-50 transition-colors rounded-xl">
+                    <div class="w-20 h-20 mx-auto bg-primary-50 rounded-full flex items-center justify-center text-primary-600 mb-6 group-hover:bg-primary-600 group-hover:text-white transition-all">
+                        <i data-lucide="home" size="32"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">居家社区康复</h3>
+                    <p class="text-slate-500 text-sm">小型化、低成本设备进入社区与家庭，实现出院后的持续康复训练。</p>
+                </div>
+                <div class="px-8 py-8 text-center group hover:bg-slate-50 transition-colors rounded-xl">
+                    <div class="w-20 h-20 mx-auto bg-orange-50 rounded-full flex items-center justify-center text-orange-600 mb-6 group-hover:bg-orange-600 group-hover:text-white transition-all">
+                        <i data-lucide="dumbbell" size="32"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">大众智能健身</h3>
+                    <p class="text-slate-500 text-sm">力控技术拓展至健身领域，提供更安全、更科学的“数字力量训练”。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- [NEW Module 4] Partners -->
+    <section class="py-16 bg-slate-50 border-t border-slate-200">
+        <div class="container mx-auto px-6 text-center">
+             <p class="text-slate-500 font-bold mb-8 uppercase tracking-widest text-xs">值得信赖的合作伙伴</p>
+             <div class="flex flex-wrap justify-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                 <!-- Placeholders for Logos -->
+                 <div class="flex items-center gap-2 font-bold text-xl text-slate-800"><i data-lucide="activity" class="text-blue-600"></i> 海南省人民医院</div>
+                 <div class="flex items-center gap-2 font-bold text-xl text-slate-800"><i data-lucide="heart-pulse" class="text-red-600"></i> 博鳌乐城先行区</div>
+                 <div class="flex items-center gap-2 font-bold text-xl text-slate-800"><i data-lucide="graduation-cap" class="text-primary-600"></i> 电子科技大学</div>
+                 <div class="flex items-center gap-2 font-bold text-xl text-slate-800"><i data-lucide="cross" class="text-green-600"></i> 华西医院康复中心</div>
+             </div>
+        </div>
+    </section>
+
+    <!-- [NEW Module 5] FAQ -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6 max-w-3xl">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">常见问题解答</h2>
+                <p class="text-slate-500 mt-2">了解更多关于产品与服务的信息</p>
+            </div>
+            <div class="space-y-4">
+                <details class="group bg-slate-50 p-6 rounded-2xl cursor-pointer">
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-800">
+                        产品是否支持医保报销？
+                        <span class="transition group-open:rotate-180"><i data-lucide="chevron-down"></i></span>
+                    </summary>
+                    <p class="text-slate-600 mt-4 leading-relaxed">是的，我们的部分医用级设备已进入国家医保目录。具体的报销比例需根据当地社保政策和医院等级而定，建议咨询您所在医院的康复科。</p>
+                </details>
+
+                <details class="group bg-slate-50 p-6 rounded-2xl cursor-pointer">
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-800">
+                        居家版设备操作复杂吗？老人能用吗？
+                        <span class="transition group-open:rotate-180"><i data-lucide="chevron-down"></i></span>
+                    </summary>
+                    <p class="text-slate-600 mt-4 leading-relaxed">非常简单。我们专为老年用户设计了“一键启动”模式和语音指导功能。且设备配有安全急停机制，确保居家使用的绝对安全。</p>
+                </details>
+
+                <details class="group bg-slate-50 p-6 rounded-2xl cursor-pointer">
+                    <summary class="flex justify-between items-center font-bold text-lg text-slate-800">
+                        如何申请代理或商务合作？
+                        <span class="transition group-open:rotate-180"><i data-lucide="chevron-down"></i></span>
+                    </summary>
+                    <p class="text-slate-600 mt-4 leading-relaxed">欢迎志同道合的伙伴加入！请通过页面底部的联系方式致电或发送邮件至 contact@daixitech.com，我们的商务经理会在24小时内与您联系。</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- [NEW Module 6] Contact Form -->
+    <section id="contact" class="py-20 bg-slate-50 relative overflow-hidden">
+        <!-- Background decoration -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-primary-100 rounded-full blur-3xl -z-10 opacity-60"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-accent-50 rounded-full blur-3xl -z-10 opacity-60"></div>
+
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
+                <div class="grid md:grid-cols-5">
+                    <!-- Contact Info Side -->
+                    <div class="md:col-span-2 bg-slate-900 text-white p-10 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-full bg-primary-900 opacity-20 z-0"></div>
+                        <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-accent-500 rounded-full blur-2xl opacity-20 z-0"></div>
+                        
+                        <div class="relative z-10">
+                            <h3 class="text-2xl font-bold mb-6">联系我们</h3>
+                            <p class="text-slate-300 text-sm mb-8 leading-relaxed">
+                                无论是产品咨询、商务合作还是售后服务，我们随时准备为您解答。
+                            </p>
+                            
+                            <div class="space-y-6">
+                                <div class="flex items-start gap-4">
+                                    <i data-lucide="phone" class="text-primary-400 shrink-0 mt-1" size="20"></i>
+                                    <div>
+                                        <p class="text-xs text-slate-400 uppercase tracking-wider">咨询热线</p>
+                                        <p class="font-bold">0898-88888888</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-4">
+                                    <i data-lucide="mail" class="text-primary-400 shrink-0 mt-1" size="20"></i>
+                                    <div>
+                                        <p class="text-xs text-slate-400 uppercase tracking-wider">电子邮箱</p>
+                                        <p class="font-bold">contact@daixitech.com</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-4">
+                                    <i data-lucide="map-pin" class="text-primary-400 shrink-0 mt-1" size="20"></i>
+                                    <div>
+                                        <p class="text-xs text-slate-400 uppercase tracking-wider">公司地址</p>
+                                        <p class="font-bold text-sm">海南省海口市复兴城互联网创新创业园 A区</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 mt-12 flex gap-4">
+                            <!-- Social Icons could go here -->
+                        </div>
+                    </div>
+
+                    <!-- Form Side -->
+                    <div class="md:col-span-3 p-10">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-6">在线留言</h3>
+                        <form onsubmit="event.preventDefault(); alert('感谢您的留言，我们会尽快与您联系！');" class="space-y-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold text-slate-700">您的姓名</label>
+                                    <input type="text" class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all" placeholder="请输入姓名" required>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold text-slate-700">联系电话</label>
+                                    <input type="tel" class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all" placeholder="请输入电话号码" required>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-slate-700">电子邮箱</label>
+                                <input type="email" class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all" placeholder="name@example.com">
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-slate-700">留言内容</label>
+                                <textarea rows="4" class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all resize-none" placeholder="请描述您的需求..." required></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary-200 transition-all hover:-translate-y-1 flex items-center justify-center gap-2">
+                                发送留言 <i data-lucide="send" size="18"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 py-16">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-6 text-white">
+                        <i data-lucide="cpu" size="28"></i>
+                        <span class="text-2xl font-bold">DAIXI<span class="text-primary-500">TECH</span></span>
+                    </div>
+                    <p class="text-slate-400 mb-6 leading-relaxed max-w-sm">
+                        海南代西网络科技有限公司。<br>
+                        用科技温暖生命，用创新重塑运动自由。<br>
+                        我们期待与医疗机构、康复中心及代理商携手合作。
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary-600 hover:text-white transition-all"><i data-lucide="twitter" size="18"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary-600 hover:text-white transition-all"><i data-lucide="linkedin" size="18"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary-600 hover:text-white transition-all"><i data-lucide="mail" size="18"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-6">快速导航</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#hero" class="hover:text-primary-400 transition-colors">回到首页</a></li>
+                        <li><a href="#technology" class="hover:text-primary-400 transition-colors">核心技术</a></li>
+                        <li><a href="#products" class="hover:text-primary-400 transition-colors">产品中心</a></li>
+                        <li><a href="#" class="hover:text-primary-400 transition-colors">招贤纳士</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold mb-6">联系方式</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="map-pin" class="shrink-0 text-primary-500" size="18"></i>
+                            <span>海南省海口市复兴城互联网创新创业园 A区</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="phone" class="shrink-0 text-primary-500" size="18"></i>
+                            <span>0898-88888888</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="mail" class="shrink-0 text-primary-500" size="18"></i>
+                            <span>contact@daixitech.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-800 pt-8 text-center text-xs text-slate-500">
+                <p>&copy; 2024 海南代西网络科技有限公司 All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AI ChatBot -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <!-- Chat Window -->
+        <div id="chat-window" class="hidden bg-white rounded-2xl shadow-2xl w-80 md:w-96 mb-4 border border-gray-100 flex flex-col animate-fade-in-up overflow-hidden h-[500px]">
+            <!-- Header -->
+            <div class="bg-primary-600 text-white p-4 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="bg-white/20 p-1.5 rounded-full">
+                        <i data-lucide="bot" size="20"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm">代西智能顾问</h3>
+                        <p class="text-xs text-primary-100 flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 bg-green-400 rounded-full block"></span> 在线
+                        </p>
+                    </div>
+                </div>
+                <button onclick="toggleChat()" class="text-white/80 hover:text-white transition-colors">
+                    <i data-lucide="x" size="20"></i>
+                </button>
+            </div>
+
+            <!-- Messages Area -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 bg-slate-50 space-y-4">
+                <div class="flex justify-start">
+                    <div class="max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm bg-white text-slate-800 border border-gray-100 rounded-bl-none">
+                        您好！我是海南代西科技的AI助手。您可以问我关于康复机器人、游戏库或合作事宜的问题。
+                    </div>
+                </div>
+            </div>
+            
+            <!-- API Key Input (Hidden by default logic managed by JS) -->
+            <div id="api-key-input-area" class="p-4 bg-gray-100 border-t border-gray-200 hidden">
+                <input type="password" id="api-key-input" class="w-full text-sm border rounded p-2 mb-2" placeholder="输入 Gemini API Key">
+                <button onclick="saveApiKey()" class="w-full bg-primary-600 text-white text-xs py-2 rounded">确认</button>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-4 bg-white border-t border-gray-100">
+                <div class="flex items-center gap-2 bg-slate-100 rounded-full px-4 py-2 border border-transparent focus-within:border-primary-300 focus-within:bg-white transition-all">
+                    <input type="text" id="chat-input" class="flex-1 bg-transparent focus:outline-none text-sm text-slate-800 placeholder-slate-400" placeholder="请输入..." onkeydown="handleChatKeyPress(event)">
+                    <button onclick="sendMessage()" id="send-btn" class="text-primary-600 hover:text-primary-700 disabled:text-gray-400 disabled:cursor-not-allowed">
+                        <i data-lucide="send" size="18"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toggle Button -->
+        <button onclick="toggleChat()" id="chat-toggle-btn" class="w-14 h-14 rounded-full shadow-2xl bg-primary-600 hover:bg-primary-700 text-white flex items-center justify-center transition-all hover:scale-110 active:scale-95">
+            <i data-lucide="message-square" size="28"></i>
+        </button>
+    </div>
+
+    <script type="module">
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+        window.GoogleGenerativeAI = GoogleGenerativeAI;
+    </script>
+
+    <script>
+        // --- Init Icons ---
+        lucide.createIcons();
+
+        // --- Scroll Logic ---
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if(el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // --- Chat Logic ---
+        let isChatOpen = false;
+        let chatSession = null;
+        let genAI = null;
+        let apiKey = localStorage.getItem('daixi_api_key') || '';
+
+        function toggleChat() {
+            const win = document.getElementById('chat-window');
+            const btn = document.getElementById('chat-toggle-btn');
+            isChatOpen = !isChatOpen;
+            
+            if(isChatOpen) {
+                win.classList.remove('hidden');
+                btn.classList.add('rotate-90', 'bg-slate-700');
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+                setTimeout(() => document.getElementById('chat-input').focus(), 100);
+            } else {
+                win.classList.add('hidden');
+                btn.classList.remove('rotate-90', 'bg-slate-700');
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
+            }
+            
+            if (!apiKey && isChatOpen) {
+                 document.getElementById('api-key-input-area').classList.remove('hidden');
+            }
+        }
+
+        window.saveApiKey = () => {
+            const input = document.getElementById('api-key-input');
+            const key = input.value.trim();
+            if (key) {
+                apiKey = key;
+                localStorage.setItem('daixi_api_key', key);
+                document.getElementById('api-key-input-area').classList.add('hidden');
+                initAI();
+                addMessage('model', '系统已连接，随时为您服务。');
+            }
+        };
+
+        function initAI() {
+            if (!apiKey || !window.GoogleGenerativeAI) return;
+            try {
+                genAI = new window.GoogleGenerativeAI(apiKey);
+                const model = genAI.getGenerativeModel({ 
+                    model: "gemini-2.5-flash",
+                    systemInstruction: `你是一家名为“海南代西网络科技有限公司”的客服AI。
+                    公司业务：开发模块化、高性价比、人机共融的康复机器人。
+                    特点：利用模块化力控关节和趣味游戏库搭建康复机器人矩阵。
+                    应用：全康复场景、全康复周期，并向健身领域拓展。
+                    语气：专业、温暖、科技感。`
+                });
+                chatSession = model.startChat();
+            } catch (e) { console.error(e); }
+        }
+
+        window.handleChatKeyPress = (e) => {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        window.sendMessage = async () => {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            addMessage('user', text);
+            input.value = '';
+
+            // AI Logic Placeholder
+            if (!apiKey) {
+                addMessage('model', '请先配置 API Key。');
+                return;
+            }
+            if (!chatSession) initAI();
+
+            const loadingId = addLoading();
+            try {
+                const result = await chatSession.sendMessage(text);
+                removeLoading(loadingId);
+                addMessage('model', result.response.text());
+            } catch (error) {
+                removeLoading(loadingId);
+                addMessage('model', '网络连接异常，请稍后再试。');
+            }
+        }
+
+        function addMessage(role, text) {
+            const container = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+            div.innerHTML = `
+                <div class="max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${role === 'user' ? 'bg-primary-600 text-white rounded-br-none' : 'bg-white text-slate-800 border border-gray-100 rounded-bl-none'}">
+                    ${text}
+                </div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function addLoading() {
+            const container = document.getElementById('chat-messages');
+            const id = 'loading-' + Date.now();
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'flex justify-start';
+            div.innerHTML = `<div class="bg-white p-3 rounded-2xl rounded-bl-none border border-gray-100 shadow-sm"><i class="animate-spin text-primary-600" data-lucide="loader-2" size="16"></i></div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            lucide.createIcons();
+            return id;
+        }
+
+        function removeLoading(id) {
+            const el = document.getElementById(id);
+            if(el) el.remove();
+        }
+
+        // Init AI on load if key exists
+        if(apiKey) initAI();
+        
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if(window.scrollY > 50) {
+                nav.classList.add('shadow-md');
+            } else {
+                nav.classList.remove('shadow-md');
+            }
+        });
+    </script>
+</body>
+</html>
